@@ -1,87 +1,112 @@
-# Welcome to React Router!
+# 🚀 AI Resume Analyzer  
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
-
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+An AI-powered resume analysis web app that scores resumes, highlights strengths, suggests improvements, and provides ATS-style feedback — helping job seekers optimize their resumes automatically.
 
 ---
 
-Built with ❤️ using React Router.
+## ✅ Features  
+
+- 📄 Resume upload (PDF/doc)
+- 🤖 AI-powered scoring & review
+- 🎯 ATS keyword matching
+- ✍️ Personalized suggestions & improvements
+- 🔍 Skill gap detection
+- 🔐 Authentication & user management (Supabase)
+- ⚡ Modern UI (Next.js + Tailwind CSS)
+- ☁️ Fully deployed on Vercel
+
+---
+
+## 🛠️ Tech Stack  
+
+| Category | Technology |
+|---|---|
+Frontend | Next.js, React, Tailwind CSS  
+Backend / Auth | Supabase  
+AI | LLM API integration  
+Language | TypeScript  
+Deployment | Vercel  
+
+---
+
+## 🔗 Live Demo  
+
+**Website:** *(Add your Vercel link here)*  
+**Demo Video:** *(Optional — YouTube/Drive link)*  
+
+---
+
+## 📸 Screenshots  
+> Add images here  
+- Login Page  
+- Dashboard  
+- Resume result screen  
+
+---
+
+## 📂 Project Structure  
+
+/app
+/auth
+/dashboard
+/public
+/components
+/utils
+/types
+
+
+---
+
+## 🧠 How It Works  
+
+1. User uploads resume PDF  
+2. Text extracted & processed  
+3. AI analyzes structure, keywords, clarity & skills  
+4. App generates ATS score + suggestions  
+5. User sees feedback in dashboard  
+
+---
+
+## 🧾 Setup & Installation  
+
+```bash
+git clone https://github.com/prashasthh/AI-Resume-Analyzer
+cd AI-Resume-Analyzer
+
+npm install
+npm run dev
+
+
+📌 Roadmap
+
+✅ Resume parsing & scoring
+
+📊 Save past resume results
+
+💡 LinkedIn profile analyzer
+
+🌐 Multi-language resume support
+
+🧠 Multiple ATS scoring modes (FAANG, Fintech, Startups)
+
+👨‍💻 What I Learned
+
+Modern full-stack development
+
+Supabase authentication & DB workflows
+
+AI prompt engineering for resume scoring
+
+Deployment on Vercel
+
+Handling file uploads + PDF processing
+
+🤝 Contributions
+
+PRs welcome! ⭐
+
+📬 Contact
+
+Developer: Prashasth
+Portfolio: (https://github.com/prashasthh)
+LinkedIn: (https://www.linkedin.com/in/prashasth-kamidri-794a63288/)
