@@ -32,7 +32,7 @@ Deployment | Vercel
 ## 🔗 Live Demo  
 
 **Website:** https://ai-resume-analyzer-roan-chi.vercel.app/auth  
-**Demo Video:** *(Optional — YouTube/Drive link)*  
+
 
 ---
 
