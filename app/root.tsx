@@ -30,7 +30,8 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isUpload = location.pathname === "/upload";
-  const hideNavbar = location.pathname.startsWith("/auth") || isUpload;
+  const isResume = location.pathname.startsWith("/resume");
+  const hideNavbar = location.pathname.startsWith("/auth") || isUpload || isResume;
   return (
     <html lang="en">
       <head>

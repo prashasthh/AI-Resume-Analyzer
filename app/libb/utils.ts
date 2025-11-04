@@ -1,3 +1,15 @@
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+/**
+ * Combines class names using clsx and tailwind-merge
+ * @param inputs - Class names to combine
+ * @returns A merged class string
+ */
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(...inputs));
+}
+
 /**
  * Formats a file size in bytes to a human-readable string
  * @param bytes - The size in bytes

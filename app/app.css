@@ -48,6 +48,67 @@ body {
     to   { opacity: 1; transform: translateY(0); }
   }
 
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+  }
+
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes gradient-shift {
+    0% { 
+      background-position: 0% 50%;
+      transform: scale(1) rotate(0deg);
+      filter: blur(60px);
+    }
+    33% {
+      background-position: 50% 100%;
+      transform: scale(1.2) rotate(120deg);
+      filter: blur(80px);
+    }
+    66% {
+      background-position: 100% 50%;
+      transform: scale(1.1) rotate(240deg);
+      filter: blur(70px);
+    }
+    100% { 
+      background-position: 0% 50%;
+      transform: scale(1) rotate(360deg);
+      filter: blur(60px);
+    }
+  }
+
+  @keyframes gradient-slow {
+    0% { 
+      opacity: 0.4;
+      transform: translate(0%, 0%) scale(1) rotate(0deg);
+      filter: blur(40px) brightness(1);
+    }
+    25% {
+      opacity: 0.6;
+      transform: translate(10%, -10%) scale(1.15) rotate(90deg);
+      filter: blur(50px) brightness(1.2);
+    }
+    50% { 
+      opacity: 0.5;
+      transform: translate(0%, -20%) scale(1.05) rotate(180deg);
+      filter: blur(60px) brightness(1.1);
+    }
+    75% {
+      opacity: 0.7;
+      transform: translate(-10%, -10%) scale(1.2) rotate(270deg);
+      filter: blur(45px) brightness(1.3);
+    }
+    100% {
+      opacity: 0.4;
+      transform: translate(0%, 0%) scale(1) rotate(360deg);
+      filter: blur(40px) brightness(1);
+    }
+  }
+
   .animate-fade-in {
     animation: fade-in 600ms ease-out both;
   }
@@ -62,6 +123,25 @@ body {
 
   .animate-fade-in-up-delay {
     animation: fade-in-up 800ms ease-out 500ms both;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-slide-in {
+    animation: slide-in 500ms ease-out both;
+  }
+
+  .animate-gradient-shift {
+    background-size: 400% 400%;
+    animation: gradient-shift 20s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    will-change: transform, filter;
+  }
+
+  .animate-gradient-slow {
+    animation: gradient-slow 25s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    will-change: transform, filter, opacity;
   }
 
   /* Animation utilities for resume cards */
@@ -82,12 +162,33 @@ body {
     position: relative;
   }
 
+  /* Resume page styles */
+  .resume-nav {
+    @apply flex flex-row w-full max-lg:flex-col-reverse;
+  }
+
+  .back-button {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full
+           bg-gray-200 hover:bg-gray-300 px-5 py-2 text-sm font-semibold text-gray-800
+           transition hover:shadow-md active:scale-[0.98] motion-reduce:active:scale-100
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400
+           focus-visible:ring-offset-2 focus-visible:ring-offset-transparent m-8;
+  }
+
+  .feedback-section {
+    @apply flex flex-col w-full p-8 space-y-6;
+  }
+
   /* Accessibility: respect reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .animate-fade-in,
     .animate-fade-in-delay,
     .animate-fade-in-up,
     .animate-fade-in-up-delay,
+    .animate-pulse-glow,
+    .animate-slide-in,
+    .animate-gradient-shift,
+    .animate-gradient-slow,
     .animate-in {
       animation: none !important;
       opacity: 1 !important;

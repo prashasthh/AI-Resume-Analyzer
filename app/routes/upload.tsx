@@ -83,9 +83,14 @@ const Upload = () => {
         
         console.log('Analysis complete:');
         console.log(data);
+        
         setStatusText('Analysis complete! Redirecting...');
+        
+        // Wait a moment to ensure KV storage is fully synced
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        navigate(`/resume/${uuid}`, { replace: true });
         // Keep isProcessing true so the message stays visible
-        // TODO: Add redirect to results page later
       } catch (analysisError) {
         console.error('Analysis error:', analysisError);
         const errorMessage = analysisError instanceof Error ? analysisError.message : JSON.stringify(analysisError);
@@ -130,34 +135,46 @@ const Upload = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-900 via-black to-black">
-      <div className="absolute top-6 left-8">
-        <span className="font-extrabold tracking-tight text-3xl sm:text-4xl text-white">
-          Rezoomed
-        </span>
-      </div>
-      <div className="absolute top-4 right-4">
-        <button
-          onClick={handleLogout}
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-full
-                     bg-gray-200 hover:bg-gray-300
-                     px-5 py-2 text-sm font-semibold text-gray-800 transition
-                     hover:shadow-md active:scale-[0.98] motion-reduce:active:scale-100
-                     focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400
-                     focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
-        >
-          Logout
-        </button>
-      </div>
+    <main className="min-h-screen relative overflow-hidden bg-black">
+      {/* Animated gradient background layers */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/80 via-black to-indigo-900/60 animate-gradient-shift"></div>
+      <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-600/30 via-transparent to-cyan-500/20 animate-gradient-slow"></div>
+      <div className="absolute inset-0 bg-gradient-to-bl from-violet-600/20 via-transparent to-purple-700/30" 
+           style={{ animation: 'gradient-slow 30s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse' }}></div>
       
-      <section className="container mx-auto px-4 pt-16">
+      {/* Noise texture overlay for depth */}
+      <div className="absolute inset-0 opacity-[0.015]" 
+           style={{ 
+             backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+             backgroundRepeat: 'repeat'
+           }}></div>
+      
+      {/* Content overlay */}
+      <div className="relative z-10">
+        <section className="container mx-auto px-4 pt-16">
         <div className="text-center max-w-5xl mx-auto">
           <h1 className="text-5xl sm:text-7xl font-bold text-purple-400 mb-6 animate-fade-in">Smart feedback for your dream job</h1>
           {isProcessing ? (
-            <>
-              <h2 className="text-2xl sm:text-4xl font-bold text-gray-300 mb-2 animate-fade-in">{statusText}</h2>
-              <img src="/images/resume-scan.gif" className="w-full max-w-xl mx-auto rounded-lg animate-fade-in-up" alt="Processing resume" />
-            </>
+            <div className="space-y-8 min-h-[400px] flex flex-col items-center justify-center">
+              <div className="relative">
+                <div className="flex items-center justify-center gap-4">
+                  <div className="relative">
+                    <div className="w-16 h-16 border-4 border-purple-500/30 rounded-full"></div>
+                    <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"></div>
+                  </div>
+                </div>
+                <h2 key={statusText} className="text-3xl sm:text-5xl font-bold text-white mt-8 animate-fade-in">
+                  {statusText}
+                </h2>
+                <p className="text-gray-400 text-lg mt-4 animate-fade-in-delay">
+                  {statusText.includes('Uploading') && 'Securely uploading your resume...'}
+                  {statusText.includes('Converting') && 'Processing document format...'}
+                  {statusText.includes('Preparing') && 'Optimizing data for AI analysis...'}
+                  {statusText.includes('Analyzing') && 'AI is reviewing your resume against job requirements...'}
+                  {statusText.includes('complete') && 'Taking you to your results...'}
+                </p>
+              </div>
+            </div>
           ) : (
             <h2 className="text-2xl sm:text-4xl font-bold text-gray-300 mb-8 animate-fade-in-delay">Drop your resume for an ATS score and improvement tips</h2>
           )}
@@ -207,6 +224,7 @@ const Upload = () => {
           )}
         </div>
       </section>
+      </div>
     </main>
   );
 };
