@@ -1,4 +1,4 @@
-export const resumes: Resume[] = [
+﻿export const resumes: Resume[] = [
     {
         id: "1",
         companyName: "Google",
@@ -90,3 +90,45 @@ export const resumes: Resume[] = [
         },
     },
 ];
+
+export const AIResponseFormat = `{
+  "overallScore": <number between 0-100>,
+  "ATS": {
+    "score": <number between 0-100>,
+    "tips": [<array of specific tips to improve ATS compatibility>]
+  },
+  "toneAndStyle": {
+    "score": <number between 0-100>,
+    "tips": [<array of specific tips to improve tone and style>]
+  },
+  "content": {
+    "score": <number between 0-100>,
+    "tips": [<array of specific tips to improve content>]
+  },
+  "structure": {
+    "score": <number between 0-100>,
+    "tips": [<array of specific tips to improve structure>]
+  },
+  "skills": {
+    "score": <number between 0-100>,
+    "tips": [<array of specific tips to improve skills section>]
+  }
+}`;
+
+export const prepareInstructions = (jobTitle: string, jobDescription: string, AIResponseFormat: string) => `
+You are an expert in ATS (Applicant Tracking System) and resume analysis.
+Please analyze this resume and suggest how to improve it.
+The rating can be low if the resume is bad.
+Be thorough and detailed. Don't be afraid to point out any mistakes.
+If there is a lot to improve, don't hesitate to give low scores.
+If available, use the job description for the job user is applying to.
+If provided, take the job description into consideration.
+
+The job title is: ${jobTitle}
+The job description is: ${jobDescription}
+
+Provide the feedback using the following format:
+${AIResponseFormat}
+
+Return the analysis as an JSON object, without any other text and quotes.
+Do not include any other text or comments.`;

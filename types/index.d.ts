@@ -18,41 +18,22 @@ interface Feedback {
     overallScore: number;
     ATS: {
         score: number;
-        tips: {
-            type: "good" | "improve";
-            tip: string;
-        }[];
+        tips: string[];
     };
     toneAndStyle: {
         score: number;
-        tips: {
-            type: "good" | "improve";
-            tip: string;
-            explanation: string;
-        }[];
+        tips: string[];
     };
     content: {
         score: number;
-        tips: {
-            type: "good" | "improve";
-            tip: string;
-            explanation: string;
-        }[];
+        tips: string[];
     };
     structure: {
         score: number;
-        tips: {
-            type: "good" | "improve";
-            tip: string;
-            explanation: string;
-        }[];
+        tips: string[];
     };
     skills: {
         score: number;
-        tips: {
-            type: "good" | "improve";
-            tip: string;
-            explanation: string;
-        }[];
+        tips: string[];
     };
 }

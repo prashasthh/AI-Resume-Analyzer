@@ -9,7 +9,6 @@ interface ResumeCardProps {
 export default function ResumeCard({ resume }: ResumeCardProps) {
     const { id, companyName, jobTitle, feedback, imagePath } = resume;
 
-
     return (
         <Link
             to={`/resume/${id}`}

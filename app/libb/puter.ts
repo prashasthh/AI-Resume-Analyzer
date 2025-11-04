@@ -101,6 +101,7 @@ const getPuter = (): typeof window.puter | null =>
 
 export const usePuterStore = create<PuterStore>((set, get) => {
   const setError = (msg: string) => {
+    
     set({
       error: msg,
       isLoading: false,
@@ -119,16 +120,20 @@ export const usePuterStore = create<PuterStore>((set, get) => {
   const checkAuthStatus = async (): Promise<boolean> => {
     const puter = getPuter();
     if (!puter) {
+      console.error("[checkAuthStatus] Puter.js not available");
       setError("Puter.js not available");
       return false;
     }
 
     set({ isLoading: true, error: null });
+    console.log("[checkAuthStatus] Checking auth status...");
 
     try {
       const isSignedIn = await puter.auth.isSignedIn();
+      console.log(`[checkAuthStatus] isSignedIn:`, isSignedIn);
       if (isSignedIn) {
         const user = await puter.auth.getUser();
+        console.log(`[checkAuthStatus] User:`, user);
         set({
           auth: {
             user,
@@ -141,8 +146,10 @@ export const usePuterStore = create<PuterStore>((set, get) => {
           },
           isLoading: false,
         });
+        console.log("[checkAuthStatus] Auth check complete - User authenticated");
         return true;
       } else {
+        console.log("[checkAuthStatus] Not signed in");
         set({
           auth: {
             user: null,
@@ -155,11 +162,13 @@ export const usePuterStore = create<PuterStore>((set, get) => {
           },
           isLoading: false,
         });
+        console.log("[checkAuthStatus] Auth check complete - User not authenticated");
         return false;
       }
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : "Failed to check auth status";
+      console.error("[checkAuthStatus] Error:", err);
       setError(msg);
       return false;
     }
@@ -242,27 +251,32 @@ export const usePuterStore = create<PuterStore>((set, get) => {
   };
 
   const init = (): void => {
+    console.log("[init] Starting initialization...");
     const puter = getPuter();
     if (puter) {
+      console.log("[init] Puter.js already available");
       set({ puterReady: true });
       checkAuthStatus();
       return;
     }
 
+    console.log("[init] Waiting for Puter.js to load...");
+    let attempts = 0;
+    const maxAttempts = 100; // 10 seconds with 100ms intervals
+    
     const interval = setInterval(() => {
+      attempts++;
       if (getPuter()) {
+        console.log(`[init] Puter.js loaded after ${attempts} attempts`);
         clearInterval(interval);
         set({ puterReady: true });
         checkAuthStatus();
+      } else if (attempts >= maxAttempts) {
+        console.error("[init] Puter.js failed to load within 10 seconds");
+        clearInterval(interval);
+        setError("Puter.js failed to load. Please refresh the page.");
       }
     }, 100);
-
-    setTimeout(() => {
-      clearInterval(interval);
-      if (!getPuter()) {
-        setError("Puter.js failed to load within 10 seconds");
-      }
-    }, 10000);
   };
 
   const write = async (path: string, data: string | File | Blob) => {
@@ -330,11 +344,13 @@ export const usePuterStore = create<PuterStore>((set, get) => {
   const feedback = async (path: string, message: string) => {
     const puter = getPuter();
     if (!puter) {
-      setError("Puter.js not available");
-      return;
+      const error = "Puter.js not available";
+      setError(error);
+      throw new Error(error);
     }
 
-    return puter.ai.chat(
+    console.log('Calling Puter AI chat with default model');
+    const response = await puter.ai.chat(
       [
         {
           role: "user",
@@ -349,9 +365,19 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             },
           ],
         },
-      ],
-      { model: "claude-sonnet-4" }
-    ) as Promise<AIResponse | undefined>;
+      ]
+    ) as any;
+    
+    console.log('Puter AI chat response:', response);
+    
+    // Check if response is an error
+    if (response && response.success === false) {
+      const errorMsg = response.error?.message || JSON.stringify(response.error) || 'Unknown AI error';
+      console.error('AI Error:', errorMsg);
+      throw new Error(`AI Error: ${errorMsg}`);
+    }
+    
+    return response as AIResponse | undefined;
   };
 
   const img2txt = async (image: string | File | Blob, testMode?: boolean) => {

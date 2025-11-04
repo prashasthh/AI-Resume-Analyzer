@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback } from "react";
 import { usePuterStore } from "../libb/puter";
 import { useLocation, useNavigate } from "react-router";
 export const meta = () => ([
@@ -12,12 +12,15 @@ const Auth = () => {
   const location = useLocation();
   const next = location.search.split("next=")[1];
   const navigate = useNavigate();
-  useEffect(() => {
-    // Only redirect if authenticated and there is a next param
-    if (auth.isAuthenticated && next) {
-      navigate(next);
+  const handleLogin = useCallback(async () => {
+    try {
+      await auth.signIn();
+      const target = next || "/";
+      navigate(target, { replace: true });
+    } catch (e) {
+      // no-op; store will capture errors
     }
-  }, [auth.isAuthenticated, next]);
+  }, [auth, navigate, next]);
   return (
   <main className="bg-gradient-to-br from-purple-900 via-black to-black min-h-screen flex items-center justify-center">
       <div className="gradient-border shadow-xl rounded-3xl p-1">
@@ -53,7 +56,7 @@ const Auth = () => {
                   <p>Log Out</p>
                 </button>
               ) : (
-                <button className="auth-button" onClick={auth.signIn}>
+                <button className="auth-button" onClick={handleLogin}>
                   <p>Log In</p>
                 </button>
               )

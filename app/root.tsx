@@ -12,7 +12,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import Navbar from "./Components/navbar";
 import { usePuterStore } from "./libb/puter";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -29,7 +29,8 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const hideNavbar = location.pathname.startsWith("/auth");
+  const isUpload = location.pathname === "/upload";
+  const hideNavbar = location.pathname.startsWith("/auth") || isUpload;
   return (
     <html lang="en">
       <head>
@@ -39,7 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <script src="https://js.puter.com/v2/"></script>
+        {!isUpload && <script src="https://js.puter.com/v2/"></script>}
         {!hideNavbar && <Navbar />}
         {children}
         <ScrollRestoration />
@@ -50,11 +51,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 
+
 export default function App() {
-  const { init } = usePuterStore();
+  const { init, isLoading } = usePuterStore();
   useEffect(() => {
     init();
   }, [init]);
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-2xl text-white bg-gradient-to-br from-purple-900 via-black to-black">
+        Loading...
+      </div>
+    );
+  }
   return <Outlet />;
 }
 
