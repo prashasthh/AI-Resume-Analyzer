@@ -11,7 +11,7 @@ export default function Navbar() {
   };
   
   return (
-    <header className="w-full flex justify-center pt-4 pb-2 bg-transparent">
+    <header className="old-navbar w-full flex justify-center pt-4 pb-2 bg-transparent">
       <nav className="w-[95%] max-w-3xl flex items-center justify-between px-6 py-2 bg-white rounded-full">
         <span className="font-extrabold tracking-tight text-xl sm:text-2xl ml-1 text-black">
           Rezoomed

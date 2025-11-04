@@ -1,5 +1,6 @@
 import { Link } from "react-router";
-import ScoreCircle from "~/Components/ScoreCircle";
+import ScoreCircle from "./ScoreCircle";
+import ResumePreview from "./ResumePreview";
 
 // Define the expected props (types)
 interface ResumeCardProps {
@@ -7,7 +8,10 @@ interface ResumeCardProps {
 }
 
 export default function ResumeCard({ resume }: ResumeCardProps) {
-    const { id, companyName, jobTitle, feedback, imagePath } = resume;
+    const { id, companyName, jobTitle, feedback } = resume;
+
+    // Default score if feedback is not available
+    const overallScore = feedback?.overallScore ?? 0;
 
     return (
         <Link
@@ -25,17 +29,13 @@ export default function ResumeCard({ resume }: ResumeCardProps) {
                 </div>
 
                 <div className="flex-shrink-0">
-                    <ScoreCircle score={feedback.overallScore} />
+                    <ScoreCircle score={overallScore} />
                 </div>
             </div>
 
-            <div className="gradient-border animate-in fade-in duration-1000 mt-3 rounded-xl overflow-hidden">
+            <div className="gradient-border animate-in fade-in duration-1000 mt-3 rounded-xl overflow-hidden bg-gray-800">
                 <div className="w-full h-full">
-                    <img
-                        src={imagePath}
-                        alt="resume"
-                        className="w-full h-[300px] max-sm:h-[200px] object-cover object-top"
-                    />
+                    <ResumePreview companyName={companyName || 'Company'} jobTitle={jobTitle || 'Position'} />
                 </div>
             </div>
         </Link>

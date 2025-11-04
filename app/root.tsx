@@ -31,7 +31,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isUpload = location.pathname === "/upload";
   const isResume = location.pathname.startsWith("/resume");
-  const hideNavbar = location.pathname.startsWith("/auth") || isUpload || isResume;
+  const isHome = location.pathname === "/home" || location.pathname === "/";
+  const hideNavbar = location.pathname.startsWith("/auth") || isUpload || isResume || isHome;
   return (
     <html lang="en">
       <head>
@@ -39,11 +40,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <style dangerouslySetInnerHTML={{__html: `
+          /* Prevent old navbar flash on home page - only hide the old white pill navbar */
+          body:has([data-route="/home"]) .old-navbar,
+          body:has([data-route="/"]) .old-navbar {
+            display: none !important;
+          }
+        `}} />
       </head>
       <body>
         {!isUpload && <script src="https://js.puter.com/v2/"></script>}
         {!hideNavbar && <Navbar />}
-        {children}
+        <div data-route={location.pathname}>
+          {children}
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>

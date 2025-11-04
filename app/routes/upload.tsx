@@ -40,7 +40,7 @@ const Upload = () => {
       
       setStatusText('Preparing data...');
       const uuid = generateUUID();
-      const data = {
+      const data: any = {
         id: uuid,
         resumePath: uploadedFile.path,
         imagePath: uploadedFile.path,
@@ -89,13 +89,77 @@ const Upload = () => {
         // Wait a moment to ensure KV storage is fully synced
         await new Promise(resolve => setTimeout(resolve, 500));
         
+        setIsProcessing(false);
         navigate(`/resume/${uuid}`, { replace: true });
-        // Keep isProcessing true so the message stays visible
-      } catch (analysisError) {
+      } catch (analysisError: any) {
         console.error('Analysis error:', analysisError);
+        
+        // Check if it's a "no fallback model" error
+        if (analysisError?.error === 'no fallback model available' || 
+            (typeof analysisError === 'object' && analysisError.success === false)) {
+          console.warn('AI service unavailable, using placeholder feedback');
+          
+          // Provide placeholder feedback when AI is unavailable
+          const placeholderFeedback = {
+            overallScore: 75,
+            ATS: {
+              score: 70,
+              tips: [
+                'AI analysis service is temporarily unavailable',
+                'Using placeholder scores - please try again later for detailed feedback',
+                'Ensure your resume includes relevant keywords from the job description',
+                'Use a clean, ATS-friendly format with clear section headers'
+              ]
+            },
+            toneAndStyle: {
+              score: 75,
+              tips: [
+                'Maintain a professional tone throughout',
+                'Use action verbs to describe accomplishments',
+                'Keep descriptions concise and impactful'
+              ]
+            },
+            content: {
+              score: 80,
+              tips: [
+                'Highlight relevant experience for the target role',
+                'Quantify achievements with specific metrics',
+                'Tailor content to match job requirements'
+              ]
+            },
+            structure: {
+              score: 75,
+              tips: [
+                'Use consistent formatting throughout',
+                'Organize sections logically',
+                'Ensure proper spacing and readability'
+              ]
+            },
+            skills: {
+              score: 70,
+              tips: [
+                'List technical skills relevant to the position',
+                'Include both hard and soft skills',
+                'Match skills mentioned in job description'
+              ]
+            }
+          };
+          
+          data.feedback = placeholderFeedback;
+          await kv.set(`resume:${uuid}`, JSON.stringify(data));
+          
+          setStatusText('Resume saved! (Using placeholder scores - AI temporarily unavailable)');
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          
+          setIsProcessing(false);
+          navigate(`/resume/${uuid}`, { replace: true });
+          return;
+        }
+        
+        // Handle other errors
         const errorMessage = analysisError instanceof Error ? analysisError.message : JSON.stringify(analysisError);
         setStatusText(`Analysis error: ${errorMessage}`);
-        alert(`Analysis failed: ${errorMessage}`);
+        alert(`Analysis failed: ${errorMessage}\n\nYour resume has been uploaded but could not be analyzed. Please try again later.`);
         setIsProcessing(false);
         return;
       }
