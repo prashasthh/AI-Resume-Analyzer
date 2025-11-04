@@ -32,6 +32,7 @@ Deployment | Vercel
 ## 🔗 Live Demo  
 
 **Website:** https://ai-resume-analyzer-roan-chi.vercel.app/auth  
+**LVE Demo** https://www.linkedin.com/posts/prashasth-kamidri-794a63288_nextjs-typescript-tailwindcss-activity-7391444392974172160-pVLE?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEXsdqAByLYBgVauPlrZh8v9Vci47iDOUPU
 
 
 ---
