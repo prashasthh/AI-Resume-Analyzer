@@ -17,7 +17,7 @@ export default function Home() {
     const navigate = useNavigate();
     const [resumeUrl, setResumeUrl] = useState('');
     const [resumes, setResumes] = useState<any[]>([]);
-    const [loadingResumes, setLoadingResumes] = useState(true);
+    const [loadingResumes, setLoadingResumes] = useState(false);
 
     const getDefaultResumes = () => {
         return [
@@ -116,18 +116,13 @@ export default function Home() {
 
     useEffect(() => {
         if (!isLoading && !auth.isAuthenticated) {
-            console.log('[Home] Not authenticated, redirecting to /auth');
             navigate(`/auth?next=${next}`);
-        } else {
-            console.log('[Home] Authenticated:', auth.isAuthenticated, 'isLoading:', isLoading);
         }
     }, [auth.isAuthenticated, isLoading, next]);
 
     useEffect(() => {
         const loadResumes = async () => {
             try {
-                console.log('[loadResumes] Starting to load resumes...');
-                
                 // Just show the default 6 resumes instantly
                 const defaultResumes = getDefaultResumes();
                 setResumes(defaultResumes);
@@ -138,7 +133,6 @@ export default function Home() {
             }
         };
 
-        console.log('[useEffect] Auth status:', auth.isAuthenticated, 'isLoading:', isLoading);
         if (auth.isAuthenticated && !isLoading) {
             // Load resumes immediately without delay
             const defaultResumes = getDefaultResumes();

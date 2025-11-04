@@ -17,16 +17,11 @@ const Upload = () => {
   };
 
   const handleAnalyze = async (companyName: string, jobTitle: string, jobDescription: string, file: File) => {
-    console.log('=== HANDLE ANALYZE STARTED ===');
-    console.log({ companyName, jobTitle, jobDescription, file });
-    
     setIsProcessing(true);
     setStatusText('Uploading the file...');
-    console.log('Status set to: Uploading the file...');
     
     try {
       const uploadedFile: FSItem | undefined = await fs.upload([file]);
-      console.log('File uploaded:', uploadedFile);
       
       if (!uploadedFile) {
         setStatusText('Error: Failed to upload file. Please try again.');
@@ -53,7 +48,6 @@ const Upload = () => {
       await kv.set(`resume:${uuid}`, JSON.stringify(data));
       
       setStatusText('Analyzing...');
-      console.log('Starting AI analysis...');
       
       try {
         // Call AI feedback with path to uploaded file and job requirements message
@@ -62,8 +56,6 @@ const Upload = () => {
           prepareInstructions(jobTitle, jobDescription, AIResponseFormat)  // message: prepared instructions
         );
         
-        console.log('Feedback received:', feedback);
-        
         if (!feedback) {
           console.error('No feedback received from AI');
           setStatusText('Error: Failed to analyze resume - no response');
@@ -71,7 +63,6 @@ const Upload = () => {
           return;
         }
         
-        console.log('Processing feedback...');
         const feedbackText: any = typeof feedback.message.content === 'string'
           ? feedback.message.content
           : feedback.message.content[0].text;
@@ -80,9 +71,6 @@ const Upload = () => {
         
         data.feedback = parsedFeedback;
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
-        
-        console.log('Analysis complete:');
-        console.log(data);
         
         setStatusText('Analysis complete! Redirecting...');
         
@@ -97,7 +85,6 @@ const Upload = () => {
         // Check if it's a "no fallback model" error
         if (analysisError?.error === 'no fallback model available' || 
             (typeof analysisError === 'object' && analysisError.success === false)) {
-          console.warn('AI service unavailable, using placeholder feedback');
           
           // Provide placeholder feedback when AI is unavailable
           const placeholderFeedback = {
